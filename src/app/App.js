@@ -6,16 +6,16 @@ import dogs from '../assets/images/dogs';
 const hello = () => {
   return (
     <div className="container">
-      <div className="image-wrapper">
-        <img src={cat} className="image-wrapper__image" alt=""/>
+      <div>
+        <img src={cat} alt=""/>
       </div>
 
-      <div className="image-wrapper">
-        <img src={dog} className="image-wrapper__image" alt=""/>
+      <div>
+        <img src={dog} alt=""/>
       </div>
 
-      <div className="image-wrapper">
-        <img src={dogs} className="image-wrapper__image" alt=""/>
+      <div>
+        <img src={dogs} alt=""/>
       </div>
     </div>
   )

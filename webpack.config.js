@@ -16,12 +16,12 @@ let config = {
   },
   module: {
     rules: [{
-      test: /\.js$/, // files ending with .js
+      test: /\.(js|jsx)$/, // files ending with .js
       exclude: /node_modules/, // exclude the node_modules directory
       loader: "babel-loader" // use this (babel-core) loader
     },
       {
-        test: /\.scss$/, // files ending with .scss
+        test: /\.(scss|css)$/, // files ending with .scss
         use: ['css-hot-loader'].concat(ExtractTextWebpackPlugin.extract({  // HMR for styles
           fallback: 'style-loader',
           use: ['css-loader', 'sass-loader', 'postcss-loader'],
