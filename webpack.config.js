@@ -3,16 +3,29 @@ const path = require('path');
 const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin'); // require webpack plugin
 const OptimizeCSSAssets = require('optimize-css-assets-webpack-plugin'); // require webpack plugin
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 let config = {
   entry: './src/index.js',
   output: {
-    path: path.resolve(__dirname, './public'),
-    filename: 'output.js'
+    publicPath: "/",
+    path: path.resolve('public'),
+    filename: 'output.js',
   },
+  devServer: {
+    hot: true,
+    publicPath: '/',
+    contentBase: path.resolve(__dirname, './src'), // A directory or URL to serve HTML content from.
+    historyApiFallback: {
+      index: `/index.html`,
+      verbose: false
+    },
+    inline: true, // inline mode (set to false to disable including client scripts (like livereload)
+    open: true // open default browser while launching
+  },
+  devtool: 'eval-source-map', // enable devtool for better debugging experience
   resolve: {
     extensions: ['.js', '.jsx', '.json', '.scss', '.css', '.jpeg', '.jpg', '.gif', '.png'] // Automatically resolve certain extensions
-
   },
   module: {
     rules: [{
@@ -25,15 +38,10 @@ let config = {
         use: ['css-hot-loader'].concat(ExtractTextWebpackPlugin.extract({  // HMR for styles
           fallback: 'style-loader',
           use: ['css-loader', 'sass-loader', 'postcss-loader'],
-        })),
+        }))
       },
       {
-        test: /\.jsx$/, // all files ending with .jsx
-        loader: 'babel-loader', // use the babel-loader for all .jsx files
-        exclude: /node_modules/ // exclude searching for files in the node_modules directory
-      },
-      {
-        test: /\.(jpe?g|png|gif|svg)$/i,
+        test: /\.(jpe?g|png|gif|svg|woff|woff2|eot|ttf)$/i,
         loaders: ['file-loader?context=src/assets/images/&name=images/[path][name].[ext]', {  // images loader
           loader: 'image-webpack-loader',
           query: {
@@ -58,15 +66,14 @@ let config = {
     ]
   },
   plugins: [
-    new ExtractTextWebpackPlugin('styles.css')
-  ],
-  devServer: {
-    contentBase: path.resolve(__dirname, './public'), // A directory or URL to serve HTML content from.
-    historyApiFallback: true, // fallback to /index.html for Single Page Applications.
-    inline: true, // inline mode (set to false to disable including client scripts (like livereload)
-    open: true // open default browser while launching
-  },
-  devtool: 'eval-source-map' // enable devtool for better debugging experience
+    new ExtractTextWebpackPlugin('styles.css'),
+    new HtmlWebpackPlugin({
+      hash: false,
+      template: path.resolve(__dirname, './public/index.html'),
+      inject: 'body',
+      filename: 'index.html'
+    })
+  ]
 }
 
 module.exports = config;
