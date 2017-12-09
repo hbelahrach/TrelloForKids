@@ -6,7 +6,6 @@ import Board from '../components/Category'
 
 class App extends Component {
   render() {
-    console.log(this.props)
     return (
       <div className="app">
         <Header />
