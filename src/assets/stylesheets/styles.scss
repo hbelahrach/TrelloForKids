@@ -9,5 +9,12 @@
 	}
 }
 
+//overide papers css
+.card:hover {
+  -webkit-box-shadow: 2px 8px 8px -5px rgba(0,0,0,.3) !important;
+  -moz-box-shadow: 2px 8px 8px -5px rgba(0,0,0,.3) !important;
+  box-shadow: 2px 8px 8px -5px rgba(0,0,0,.3) !important;
+  -webkit-transform: none;
+}
 
 

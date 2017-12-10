@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Draggable } from "react-beautiful-dnd";
+import { Draggable, Droppable } from "react-beautiful-dnd";
+import TaskItem from "./TaskItem";
 
 const getItemStyle = (draggableStyle, isDragging) => ({
 	background: isDragging ? "lightblue" : "",
@@ -11,9 +12,9 @@ class ListItem extends Component {
 	render() {
 		return (
 			<Draggable
-				key={this.props.draggableId}
-				draggableId={this.props.draggableId}
-				type="ListItem"
+				key={this.props.item.id}
+				draggableId={this.props.item.id}
+				type="droppable-lists"
 			>
 				{(provided, snapshot) => (
 					<div className="sm-4 col">
@@ -27,43 +28,47 @@ class ListItem extends Component {
 						>
 							<div className="card">
 								<div className="card-header">
-									List item {this.props.draggableId}
+									{this.props.item.title}
 								</div>
-								<div className="card-body">
-									<div className="row flex-middle">
-										<div className="col sm-12">
-											<div className="form-group">
-												<input
-													type="text"
-													placeholder="Add a new task ..."
-													id="paperInputs1"
-												/>
-											</div>
-										</div>
-									</div>
-									<div className="row flex-middle">
-										<div className="col sm-12">
-											<div className="card">
-												<div className="card-body">
-													<h4 className="card-title">
-														Task 1
-													</h4>
+
+								<Droppable
+									droppableId={`droppable-tasks-${
+										this.props.item.id
+									}`}
+									type={`droppable-tasks-${
+										this.props.item.id
+									}`}
+									direction="vertical"
+								>
+									{(provided, snapshot) => (
+										<div className="card-body">
+											<div className="row">
+												<div className="form-group">
+													<input
+														type="text"
+														placeholder="Add a new task ..."
+														id="paperInputs1"
+													/>
 												</div>
 											</div>
-										</div>
-									</div>
-									<div className="row flex-middle">
-										<div className="col sm-12">
-											<div className="card">
-												<div className="card-body">
-													<h4 className="card-title">
-														Task 2
-													</h4>
-												</div>
+											<div ref={provided.innerRef}>
+												{this.props.item.tasks.map(
+													task => (
+														<TaskItem
+															item={task}
+															key={task.id}
+															droppableId={`droppable-tasks-${
+																this.props.item
+																	.id
+															}`}
+														/>
+													)
+												)}
+												{provided.placeholder}
 											</div>
 										</div>
-									</div>
-								</div>
+									)}
+								</Droppable>
 							</div>
 							{provided.placeholder}
 						</div>
