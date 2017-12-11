@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
-import { itemsFetchData } from "../actions/boards";
+import { getBoard } from "../actions/boards";
 import AddList from "./AddList";
 import ListItem from "./ListItem";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -16,20 +16,15 @@ const reorder = (lists, startIndex, endIndex) => {
 class Category extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      lists: [
-        {
-          id: 0,
-          title: "list 1",
-          tasks: [{ id: 0, title: "task 0" }, { id: 1, title: "task 1" }]
-        },
-        {
-          id: 1,
-          title: "list 2",
-          tasks: [{ id: 0, title: "task 0" }, { id: 1, title: "task 2" }]
-        }
-      ]
-    };
+  }
+
+  componentWillMount() {
+    let { history, match } = this.props;
+    this.props.getBoard(
+      `http://5a2dcd370e07b700120839f0.mockapi.io/api/boards/${
+        match.params.number
+      }`
+    );
   }
 
   onDragEnd = result => {
@@ -66,11 +61,15 @@ class Category extends Component {
   };
 
   render() {
+    let { activeBoard } = this.props;
+
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
         <div className="container padding-top-large">
           <h1>
-            <span className="badge danger">Title board</span>
+            <span className="badge danger">
+              {activeBoard && activeBoard.title}
+            </span>
           </h1>
           <div className="row">
             <AddList />
@@ -80,14 +79,16 @@ class Category extends Component {
             type="droppable-lists"
             direction="horizontal"
           >
-            {(provided, snapshot) => (
-              <div className="row" ref={provided.innerRef}>
-                {this.state.lists.map(item => (
-                  <ListItem item={item} key={item.id} />
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
+            {(provided, snapshot) =>
+              activeBoard && (
+                <div className="row" ref={provided.innerRef}>
+                  {activeBoard.lists.map(item => (
+                    <ListItem item={item} key={item.id} />
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )
+            }
           </Droppable>
         </div>
       </DragDropContext>
@@ -97,16 +98,16 @@ class Category extends Component {
 
 const mapStateToProps = state => {
   return {
-    items: state.items,
-    error: state.itemsError,
-    isLoading: state.itemsIsLoading
+    activeBoard: state.boards.activeBoard,
+    error: state.boards.activeBoardError,
+    isLoading: state.boards.activeBoardIsLoading
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchData: url => dispatch(itemsFetchData(url))
+    getBoard: url => dispatch(getBoard(url))
   };
 };
 
-export default connect(null, null)(Category);
+export default connect(mapStateToProps, mapDispatchToProps)(Category);

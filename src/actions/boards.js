@@ -19,23 +19,20 @@ export function boardsSuccess(items) {
     };
 }
 
-export function boardsFetch(url) {
+export function getBoards(url) {
     return dispatch => {
         dispatch(boardsIsLoading(true));
         fetch(url, {
             "Access-Control-Allow-Origin": "*"
         })
             .then(response => {
-                if (!response.ok) 
-                    throw Error(response.statusText);
+                if (!response.ok) throw Error(response.statusText);
                 dispatch(boardsIsLoading(false));
                 return response;
             })
             .then(response => response.json())
-            .then(items => dispatch(boardsSuccess(items))
-            .catch(err => {
-                 dispatch(boardsError(true));
-            });
+            .then(items => dispatch(boardsSuccess(items)))
+            .catch(err => dispatch(boardsError(true)));
     };
 }
 
@@ -53,17 +50,19 @@ export function activeBoardIsLoading(bool) {
     };
 }
 
-export function activeBoardSuccess(items) {
+export function activeBoardSuccess(item) {
     return {
         type: "ACTIVE_BOARD_SUCCESS",
-        items
+        item
     };
 }
 
-export function boardFetch(url) {
+export function getBoard(url) {
     return dispatch => {
         dispatch(activeBoardIsLoading(true));
-        fetch(url)
+        fetch(url, {
+            "Access-Control-Allow-Origin": "*"
+        })
             .then(response => {
                 if (!response.ok) {
                     throw Error(response.statusText);
@@ -74,7 +73,28 @@ export function boardFetch(url) {
                 return response;
             })
             .then(response => response.json())
-            .then(items => dispatch(activeBoardSuccess(items)))
+            .then(item => {
+                return dispatch(activeBoardSuccess(item));
+            })
             .catch(() => dispatch(activeBoardError(true)));
+    };
+}
+
+export function addBoard(url, data) {
+    return dispatch => {
+        dispatch(activeBoardIsLoading(true));
+        return fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            "Access-Control-Allow-Origin": "*",
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                return response;
+            })
+            .then(response => response.json())
+            .catch(() => dispatch(boardsError(true)));
     };
 }

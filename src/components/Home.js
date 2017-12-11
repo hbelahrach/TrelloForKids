@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
-import { boardsFetch } from "../actions/boards";
+import { getBoards, addBoard } from "../actions/boards";
 import AddBoard from "./AddBoard";
 
 class Home extends Component {
@@ -50,7 +50,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getBoards: url => dispatch(boardsFetch(url))
+    getBoards: url => dispatch(getBoards(url))
   };
 };
 

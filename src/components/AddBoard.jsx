@@ -1,10 +1,29 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { getBoards, addBoard } from "../actions/boards";
 
 class AddBoard extends Component {
 	constructor(props) {
 		super(props);
 		this.state = { open: false };
+		this.title = "";
 	}
+
+	create = () => {
+		if (this.title)
+			this.props
+				.addBoard(
+					"http://5a2dcd370e07b700120839f0.mockapi.io/api/boards",
+					{ title: this.title }
+				)
+				.then(() => {
+					this.title = "";
+					this.input.value = "";
+					this.props.getBoards(
+						"http://5a2dcd370e07b700120839f0.mockapi.io/api/boards"
+					);
+				});
+	};
 
 	render() {
 		return (
@@ -41,9 +60,15 @@ class AddBoard extends Component {
 									type="text"
 									placeholder="Board name ..."
 									id="paperInputs1"
+									ref={el => (this.input = el)}
+									onChange={e =>
+										(this.title = e.target.value)
+									}
 								/>
 							</div>
-							<button className="btn-small">Create</button>
+							<button className="btn-small" onClick={this.create}>
+								Create
+							</button>
 						</div>
 					</div>
 				)}
@@ -52,4 +77,11 @@ class AddBoard extends Component {
 	}
 }
 
-export default AddBoard;
+const mapDispatchToProps = dispatch => {
+	return {
+		getBoards: url => dispatch(getBoards(url)),
+		addBoard: (url, item) => dispatch(addBoard(url, item))
+	};
+};
+
+export default connect(null, mapDispatchToProps)(AddBoard);
