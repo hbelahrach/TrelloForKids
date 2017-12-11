@@ -17,23 +17,25 @@ class TaskItem extends Component {
 			>
 				{(provided, snapshot) => (
 					<div className="row">
-						<div
-							ref={provided.innerRef}
-							style={getItemStyle(
-								provided.draggableStyle,
-								snapshot.isDragging
-							)}
-							{...provided.dragHandleProps}
-						>
-							<div className="card">
-								<div className="card-body">
-									<h4 className="card-title">
-										{this.props.item.title}
-									</h4>
+						<div className="col-fill col">
+							<div
+								ref={provided.innerRef}
+								style={getItemStyle(
+									provided.draggableStyle,
+									snapshot.isDragging
+								)}
+								{...provided.dragHandleProps}
+							>
+								<div className="card">
+									<div className="card-body">
+										<h4 className="card-title">
+											{this.props.item.title}
+										</h4>
+									</div>
 								</div>
 							</div>
+							{provided.placeholder}
 						</div>
-						{provided.placeholder}
 					</div>
 				)}
 			</Draggable>

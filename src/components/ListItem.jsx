@@ -43,12 +43,14 @@ class ListItem extends Component {
 									{(provided, snapshot) => (
 										<div className="card-body">
 											<div className="row">
-												<div className="form-group">
-													<input
-														type="text"
-														placeholder="Add a new task ..."
-														id="paperInputs1"
-													/>
+												<div className="col-fill col padding-bottom-none">
+													<div className="form-group">
+														<input
+															type="text"
+															placeholder="Add a new task ..."
+															id="paperInputs1"
+														/>
+													</div>
 												</div>
 											</div>
 											<div ref={provided.innerRef}>

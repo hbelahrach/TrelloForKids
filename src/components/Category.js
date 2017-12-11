@@ -1,7 +1,6 @@
-import React, { Component } from "react";
-import cat from "../assets/images/cat";
-import dog from "../assets/images/dog";
-import dogs from "../assets/images/dogs";
+import React, { Component, PropTypes } from "react";
+import { connect } from "react-redux";
+import { itemsFetchData } from "../actions/boards";
 import AddList from "./AddList";
 import ListItem from "./ListItem";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -73,6 +72,9 @@ class Category extends Component {
           <h1>
             <span className="badge danger">Title board</span>
           </h1>
+          <div className="row">
+            <AddList />
+          </div>
           <Droppable
             droppableId="droppable-lists"
             type="droppable-lists"
@@ -93,4 +95,18 @@ class Category extends Component {
   }
 }
 
-export default Category;
+const mapStateToProps = state => {
+  return {
+    items: state.items,
+    error: state.itemsError,
+    isLoading: state.itemsIsLoading
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchData: url => dispatch(itemsFetchData(url))
+  };
+};
+
+export default connect(null, null)(Category);
