@@ -1,3 +1,7 @@
+/*
+* @author  Hamid belahrach
+*/
+
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -6,7 +10,7 @@ import { updateTask, getBoard } from "../actions/boards";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 
 const getItemStyle = (draggableStyle, isDragging) => ({
-	background: isDragging ? "lightblue" : "",
+	background: isDragging ? "aliceblue" : "",
 	...draggableStyle
 });
 
@@ -16,7 +20,7 @@ class TaskItem extends Component {
 		item.done = !item.done;
 		this.props
 			.updateTask(this.props.item._id, { done: item.done })
-			.then(() => this.props.getBoard(this.props.match.params.number));
+			.then(() => this.props.getBoard(this.props.match.params.boardId));
 	};
 
 	render() {

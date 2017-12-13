@@ -1,3 +1,7 @@
+/*
+* @author  Hamid belahrach
+*/
+
 const webpack = require("webpack");
 const path = require("path");
 const ExtractTextWebpackPlugin = require("extract-text-webpack-plugin");

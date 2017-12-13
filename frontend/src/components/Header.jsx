@@ -1,18 +1,16 @@
+/*
+* @author  Hamid belahrach
+*/
+
 import React, { Component } from "react";
 import logo from "../assets/images/logo.png";
 
-const hello = () => {
+const Header = () => {
 	return (
 		<div className="padding-left-large header">
-			<img
-				style={{
-					width: "15em",
-					border: "none"
-				}}
-				src={logo}
-			/>
+			<img src={logo} />
 		</div>
 	);
 };
 
-export default hello;
+export default Header;

@@ -1,3 +1,7 @@
+/*
+* @author  Hamid belahrach
+*/
+
 import "./assets/stylesheets/fontawesome-all.css";
 import "papercss/dist/paper.css";
 import "./assets/stylesheets/styles.scss";

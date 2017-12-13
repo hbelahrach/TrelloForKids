@@ -1,3 +1,7 @@
+/*
+* @author  Hamid belahrach
+*/
+
 import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
 import Header from "../components/Header";
@@ -11,8 +15,7 @@ class App extends Component {
         <Header />
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route path="/board/:number" component={Board} />
-          {/*<Route component={NotFound} />*/}
+          <Route path="/board/:boardId" component={Board} />
         </Switch>
       </div>
     );

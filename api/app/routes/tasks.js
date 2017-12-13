@@ -1,5 +1,10 @@
+/*
+* @author  Hamid belahrach
+*/
+
 var taskModel = require("../../models/tasks.js"),
 	express = require("express"),
+	ObjectId = require("mongoose").Types.ObjectId,
 	bodyParser = require("body-parser"),
 	taskRouter = express.Router();
 
@@ -17,23 +22,15 @@ taskRouter.route("/order").post((req, res) => {
 	});
 });
 
-taskRouter
-	.route("/:taskId")
-	.get((req, res) => {
-		taskModel.findById(req.params.taskId).exec((err, task) => {
+taskRouter.route("/:taskId").put((req, res) => {
+	taskModel.findByIdAndUpdate(
+		req.params.taskId,
+		{ $set: req.body.item },
+		(err, task) => {
 			if (err) throw err;
 			res.json(task);
-		});
-	})
-	.put((req, res) => {
-		taskModel.findByIdAndUpdate(
-			req.params.taskId,
-			{ $set: req.body.item },
-			(err, task) => {
-				if (err) throw err;
-				res.json(task);
-			}
-		);
-	});
+		}
+	);
+});
 
 module.exports = taskRouter;

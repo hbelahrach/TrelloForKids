@@ -1,3 +1,7 @@
+/*
+* @author  Hamid belahrach
+*/
+
 import { combineReducers } from "redux";
 
 function boards(state = [], action) {

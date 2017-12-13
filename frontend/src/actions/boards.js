@@ -1,3 +1,7 @@
+/*
+* @author  Hamid belahrach
+*/
+
 export function boardsError(bool) {
     return {
         type: "BOARDS_ERROR",
@@ -124,7 +128,9 @@ export function addTask(listId, data) {
             body: JSON.stringify(data)
         })
             .then(response => response.json())
-            .catch(e => console.log(e));
+            .catch(e => {
+                return e;
+            });
     };
 }
 
@@ -154,13 +160,15 @@ export function orderBoard(boardId, lists) {
             body: JSON.stringify({ lists })
         })
             .then(response => response.json())
-            .catch(e => console.log(e));
+            .catch(e => {
+                return e;
+            });
     };
 }
 
 export function orderList(listId, tasks) {
     return dispatch => {
-        return fetch(`${process.env.apiUrl}/lists/${listId}/tasks/order`, {
+        return fetch(`${process.env.apiUrl}/tasks/order`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -169,6 +177,8 @@ export function orderList(listId, tasks) {
             body: JSON.stringify({ tasks })
         })
             .then(response => response.json())
-            .catch(e => console.log(e));
+            .catch(e => {
+                return e;
+            });
     };
 }

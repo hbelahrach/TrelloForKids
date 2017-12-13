@@ -1,3 +1,7 @@
+/*
+* @author  Hamid belahrach
+*/
+
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
 import {
@@ -25,12 +29,12 @@ class Board extends Component {
 
   componentWillMount() {
     let { history, match } = this.props;
-    this.props.getBoard(match.params.number);
+    this.props.getBoard(match.params.boardId);
   }
 
   onDragEnd = result => {
     if (!result.destination) return;
-    let board = this.props.activeBoard;
+    let board = Object.assign({}, this.props.activeBoard);
 
     if (result.destination.droppableId == "droppable-lists") {
       let items = reorder(
@@ -41,29 +45,45 @@ class Board extends Component {
 
       board.lists = items;
       this.props.activeBoardSuccess(board);
-      this.props.orderBoard(this.props.match.params.number, items);
+      this.props.orderBoard(this.props.match.params.boardId, items);
     }
 
     if (result.destination.droppableId.startsWith("droppable-tasks")) {
-      let droppableId = result.destination.droppableId;
-      let parts = droppableId.split("-");
+      let srcDroppableId = result.source.droppableId;
+      let srcParts = srcDroppableId.split("-");
+      let destDroppableId = result.destination.droppableId;
+      let destParts = destDroppableId.split("-");
       let lists = this.props.activeBoard.lists;
-      let index = lists.findIndex(item => item._id == parts[2]);
+      let destIndex = lists.findIndex(item => item._id == destParts[2]);
+      let srcIndex = lists.findIndex(item => item._id == srcParts[2]);
 
-      let items = reorder(
-        lists[index].tasks,
-        result.source.index,
-        result.destination.index
-      );
-
-      board.lists[index].tasks = items;
-      this.props.activeBoardSuccess(board);
-      this.props.orderList(parts[2], items);
+      if (srcIndex == destIndex) {
+        let items = reorder(
+          lists[destIndex].tasks,
+          result.source.index,
+          result.destination.index
+        );
+        board.lists[destIndex].tasks = items;
+        this.props.activeBoardSuccess(board);
+        this.props.orderList(destParts[2], items);
+      } else {
+        let [removed] = board.lists[srcIndex].tasks.splice(
+          result.source.index,
+          1
+        );
+        board.lists[destIndex].tasks.splice(
+          result.destination.index,
+          0,
+          removed
+        );
+        this.props.activeBoardSuccess(board);
+      }
     }
   };
 
   render() {
     let { activeBoard } = this.props;
+    console.log("in here !!!!");
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
         <div className="container">

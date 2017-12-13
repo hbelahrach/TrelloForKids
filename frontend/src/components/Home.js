@@ -1,3 +1,7 @@
+/*
+* @author  Hamid belahrach
+*/
+
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
 import { getBoards, addBoard, orderList } from "../actions/boards";
@@ -40,9 +44,7 @@ class Home extends Component {
 }
 const mapStateToProps = state => {
   return {
-    items: state.boards.boards,
-    error: state.boards.boardsError,
-    isLoading: state.boards.boardsIsLoading
+    items: state.boards.boards
   };
 };
 

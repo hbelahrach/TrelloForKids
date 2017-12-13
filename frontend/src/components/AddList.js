@@ -1,3 +1,7 @@
+/*
+* @author  Hamid belahrach
+*/
+
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
@@ -13,7 +17,7 @@ class AddList extends Component {
 	create = () => {
 		if (this.title)
 			this.props
-				.addList(this.props.match.params.number, { title: this.title })
+				.addList(this.props.match.params.boardId, { title: this.title })
 				.then(() => {
 					this.title = "";
 					this.input.value = "";

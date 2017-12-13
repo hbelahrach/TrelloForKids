@@ -1,3 +1,7 @@
+/*
+* @author  Hamid belahrach
+*/
+
 var boardModel = require("../../models/boards.js"),
 	listModel = require("../../models/lists.js"),
 	express = require("express"),
@@ -72,28 +76,11 @@ boardRouter.route("/:boardId/lists").post((req, res) => {
 				board.save((err, updatedboard) => {
 					if (err) throw err;
 					board.lists.sort((m1, m2) => m1.order > m2.order);
+					board.lists.map(list => {
+						list.tasks.sort((m1, m2) => m1.order > m2.order);
+					});
 					res.send(board);
 				});
-			});
-		});
-});
-
-boardRouter.route("/:boardId/lists/order").post((req, res) => {
-	boardModel
-		.findById(req.params.boardId)
-		.populate("lists")
-		.exec((err, board) => {
-			if (err) throw err;
-			// not the most efficient but the simplest !
-			let lists = req.body.lists;
-			var bulk = listModel.collection.initializeOrderedBulkOp();
-			lists.forEach((el, index) => {
-				bulk
-					.find({ _id: ObjectId(el._id) })
-					.update({ $set: { order: index } });
-			});
-			bulk.execute(function(error, result) {
-				res.json(result);
 			});
 		});
 });

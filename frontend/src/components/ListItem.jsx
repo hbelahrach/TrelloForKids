@@ -1,13 +1,17 @@
+/*
+* @author  Hamid belahrach
+*/
+
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { Draggable, Droppable } from "react-beautiful-dnd";
-import TaskItem from "./TaskItem";
 import { getBoard, addTask } from "../actions/boards";
+import TaskItem from "./TaskItem";
 
 const getItemStyle = (draggableStyle, isDragging) => ({
-	background: isDragging ? "lightblue" : "",
+	background: isDragging ? "aliceblue" : "",
 	...draggableStyle
 });
 
@@ -24,7 +28,7 @@ class ListItem extends Component {
 				.then(() => {
 					this.input.value = "";
 					this.title = "";
-					this.props.getBoard(this.props.match.params.number);
+					this.props.getBoard(this.props.match.params.boardId);
 				});
 		}
 	};
@@ -55,9 +59,7 @@ class ListItem extends Component {
 									droppableId={`droppable-tasks-${
 										this.props.item._id
 									}`}
-									type={`droppable-tasks-${
-										this.props.item._id
-									}`}
+									type={`droppable-tasks`}
 									direction="vertical"
 								>
 									{(provided, snapshot) => (
@@ -90,10 +92,7 @@ class ListItem extends Component {
 														<TaskItem
 															item={task}
 															key={task._id}
-															droppableId={`droppable-tasks-${
-																this.props.item
-																	._id
-															}`}
+															droppableId={`droppable-tasks`}
 														/>
 													)
 												)}
@@ -112,6 +111,14 @@ class ListItem extends Component {
 	}
 }
 
+const mapStateToProps = state => {
+	return {
+		activeBoard: state.boards.activeBoard,
+		error: state.boards.activeBoardError,
+		isLoading: state.boards.activeBoardIsLoading
+	};
+};
+
 const mapDispatchToProps = dispatch => {
 	return {
 		getBoard: boardId => dispatch(getBoard(boardId)),
@@ -119,4 +126,6 @@ const mapDispatchToProps = dispatch => {
 	};
 };
 
-export default connect(null, mapDispatchToProps)(withRouter(ListItem));
+export default connect(mapStateToProps, mapDispatchToProps)(
+	withRouter(ListItem)
+);

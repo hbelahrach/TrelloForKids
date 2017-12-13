@@ -1,3 +1,7 @@
+/*
+* @author  Hamid belahrach
+*/
+
 var mongooose = require("mongoose"),
 	Schema = mongooose.Schema;
 
@@ -12,7 +16,7 @@ var taskSchema = new Schema(
 		},
 		done: {
 			type: Boolean,
-			required: false
+			default: false
 		}
 	},
 	{

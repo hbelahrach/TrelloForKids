@@ -1,3 +1,7 @@
+/*
+* @author  Hamid belahrach
+*/
+
 var mongooose = require("mongoose"),
 	Schema = mongooose.Schema;
 
