@@ -11,8 +11,8 @@ class TaskItem extends Component {
 	render() {
 		return (
 			<Draggable
-				key={this.props.item.id}
-				draggableId={this.props.item.id}
+				key={this.props.item._id}
+				draggableId={this.props.item._id}
 				type={this.props.droppableId}
 			>
 				{(provided, snapshot) => (
@@ -30,6 +30,10 @@ class TaskItem extends Component {
 									<div className="card-body">
 										<h4 className="card-title">
 											{this.props.item.title}
+											<i
+												className={`fa ${this.props.item
+													.done && "fa-check"}`}
+											/>
 										</h4>
 									</div>
 								</div>

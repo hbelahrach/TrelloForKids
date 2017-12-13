@@ -67,9 +67,7 @@ export function getBoard(boardId) {
                 if (!response.ok) {
                     throw Error(response.statusText);
                 }
-
                 dispatch(activeBoardIsLoading(false));
-
                 return response;
             })
             .then(response => response.json())
@@ -91,9 +89,6 @@ export function addBoard(data) {
             "Access-Control-Allow-Origin": "*",
             body: JSON.stringify(data)
         })
-            .then(response => {
-                return response;
-            })
             .then(response => response.json())
             .catch(() => dispatch(boardsError(true)));
     };
@@ -110,13 +105,8 @@ export function addList(boardId, data) {
             "Access-Control-Allow-Origin": "*",
             body: JSON.stringify(data)
         })
-            .then(response => {
-                return response;
-            })
-
             .then(response => response.json())
             .then(item => {
-                console.log("item: ", item);
                 return dispatch(activeBoardSuccess(item));
             })
             .catch(() => dispatch(boardsError(true)));
@@ -133,38 +123,37 @@ export function addTask(listId, data) {
             "Access-Control-Allow-Origin": "*",
             body: JSON.stringify(data)
         })
-            .then(response => {
-                return response;
-            })
-
             .then(response => response.json())
-            .then(item => {
-                console.log("item: ", item);
-            })
-            .catch(e => {
-                console.log(e);
-            });
+            .catch(e => console.log(e));
     };
 }
 
-export function orderList(boardId, params) {
+export function orderBoard(boardId, lists) {
     return dispatch => {
-        return fetch(`${process.env.apiUrl}/boards/${boardId}/order`, {
+        return fetch(`${process.env.apiUrl}/lists/order`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             "Access-Control-Allow-Origin": "*",
-            body: JSON.stringify(params)
+            body: JSON.stringify({ lists })
         })
-            .then(response => {
-                return response;
-            })
-
             .then(response => response.json())
-            .then(list => {
-                console.log(list);
-            })
+            .catch(e => console.log(e));
+    };
+}
+
+export function orderList(listId, tasks) {
+    return dispatch => {
+        return fetch(`${process.env.apiUrl}/lists/${listId}/tasks/order`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            "Access-Control-Allow-Origin": "*",
+            body: JSON.stringify({ tasks })
+        })
+            .then(response => response.json())
             .catch(e => console.log(e));
     };
 }

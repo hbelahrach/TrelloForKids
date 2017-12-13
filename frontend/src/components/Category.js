@@ -1,7 +1,11 @@
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
-import { getBoard,     orderList: (boardId, params) => dispatch(orderList(boardId, params))
- } from "../actions/boards";
+import {
+  getBoard,
+  orderList,
+  orderBoard,
+  activeBoardSuccess
+} from "../actions/boards";
 import AddList from "./AddList";
 import ListItem from "./ListItem";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -26,40 +30,40 @@ class Category extends Component {
 
   onDragEnd = result => {
     if (!result.destination) return;
+    let board = this.props.activeBoard;
+
     if (result.destination.droppableId == "droppable-lists") {
       let items = reorder(
-        this.props.lists,
+        this.props.activeBoard.lists,
         result.source.index,
         result.destination.index
       );
 
-      this.setState({
-        lists: items
-      });
+      board.lists = items;
+      this.props.activeBoardSuccess(board);
+      this.props.orderBoard(this.props.match.params.number, items);
     }
 
     if (result.destination.droppableId.startsWith("droppable-tasks")) {
       let droppableId = result.destination.droppableId;
       let parts = droppableId.split("-");
-      let lists = this.state.lists;
-      let index = lists.findIndex(item => item.id == parts[2]);
+      let lists = this.props.activeBoard.lists;
+      let index = lists.findIndex(item => item._id == parts[2]);
 
       let items = reorder(
         lists[index].tasks,
         result.source.index,
         result.destination.index
       );
-      lists[index].tasks = items;
 
-      this.setState({
-        lists: lists
-      });
+      board.lists[index].tasks = items;
+      this.props.activeBoardSuccess(board);
+      this.props.orderList(parts[2], items);
     }
   };
 
   render() {
     let { activeBoard } = this.props;
-    console.log("activeBoard: ", activeBoard);
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
         <div className="container padding-top-large">
@@ -104,7 +108,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     getBoard: boardId => dispatch(getBoard(boardId)),
-    orderList: (boardId, params) => dispatch(orderList(boardId, params))
+    orderBoard: (boardId, lists) => dispatch(orderBoard(boardId, lists)),
+    orderList: (listId, tasks) => dispatch(orderList(listId, tasks)),
+    activeBoardSuccess: item => dispatch(activeBoardSuccess(item))
   };
 };
 

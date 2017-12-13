@@ -11,7 +11,6 @@ class AddList extends Component {
 	}
 
 	create = () => {
-		console.log(this.props.addList);
 		if (this.title)
 			this.props
 				.addList(this.props.match.params.number, { title: this.title })
@@ -22,7 +21,6 @@ class AddList extends Component {
 	};
 
 	render() {
-		console.log("this.props: ", this.props);
 		return (
 			<div>
 				{!this.state.open && (
