@@ -1,6 +1,6 @@
 const boardsRouter = require("./boards.js");
 const listsRouter = require("./lists.js");
-const tasksRouter = require("./lists.js");
+const tasksRouter = require("./tasks.js");
 
 module.exports = function(app, db) {
 	app.use("/api/boards", boardsRouter);

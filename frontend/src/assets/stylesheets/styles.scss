@@ -1,11 +1,33 @@
-.app {
-	border: 20px;
-}
-
 .card-header {
 	i {
 		right: 1em;
 	    position: absolute;
+	}
+}
+
+.check {
+	right: 0.9em;
+    position: absolute;
+    top: 35%;
+    font-size: 1.1rem;
+}
+
+.header {
+	padding-left: 2rem;
+	img {
+		width: 15em;
+		border: none;
+	}
+}
+
+@media only screen and (max-device-width : 640px) {
+	.header {
+		margin: 0 auto;
+		img {
+			width: 15em;
+			border: none;
+			margin: 0 6px;
+		}
 	}
 }
 

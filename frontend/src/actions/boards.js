@@ -19,23 +19,6 @@ export function boardsSuccess(items) {
     };
 }
 
-export function getBoards() {
-    return dispatch => {
-        dispatch(boardsIsLoading(true));
-        fetch(`${process.env.apiUrl}/boards`, {
-            "Access-Control-Allow-Origin": "*"
-        })
-            .then(response => {
-                if (!response.ok) throw Error(response.statusText);
-                dispatch(boardsIsLoading(false));
-                return response;
-            })
-            .then(response => response.json())
-            .then(items => dispatch(boardsSuccess(items)))
-            .catch(err => dispatch(boardsError(true)));
-    };
-}
-
 export function activeBoardError(bool) {
     return {
         type: "ACTIVE_BOARD_ERROR",
@@ -54,6 +37,23 @@ export function activeBoardSuccess(item) {
     return {
         type: "ACTIVE_BOARD_SUCCESS",
         item
+    };
+}
+
+export function getBoards() {
+    return dispatch => {
+        dispatch(boardsIsLoading(true));
+        fetch(`${process.env.apiUrl}/boards`, {
+            "Access-Control-Allow-Origin": "*"
+        })
+            .then(response => {
+                if (!response.ok) throw Error(response.statusText);
+                dispatch(boardsIsLoading(false));
+                return response;
+            })
+            .then(response => response.json())
+            .then(items => dispatch(boardsSuccess(items)))
+            .catch(err => dispatch(boardsError(true)));
     };
 }
 
@@ -125,6 +125,21 @@ export function addTask(listId, data) {
         })
             .then(response => response.json())
             .catch(e => console.log(e));
+    };
+}
+
+export function updateTask(taskId, item) {
+    return dispatch => {
+        return fetch(`${process.env.apiUrl}/tasks/${taskId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            "Access-Control-Allow-Origin": "*",
+            body: JSON.stringify({ item })
+        })
+            .then(response => response.json())
+            .catch(e => e);
     };
 }
 

@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { withRouter } from "react-router";
+import { updateTask, getBoard } from "../actions/boards";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 
 const getItemStyle = (draggableStyle, isDragging) => ({
@@ -8,6 +11,14 @@ const getItemStyle = (draggableStyle, isDragging) => ({
 });
 
 class TaskItem extends Component {
+	check = () => {
+		let item = this.props.item;
+		item.done = !item.done;
+		this.props
+			.updateTask(this.props.item._id, { done: item.done })
+			.then(() => this.props.getBoard(this.props.match.params.number));
+	};
+
 	render() {
 		return (
 			<Draggable
@@ -26,13 +37,17 @@ class TaskItem extends Component {
 								)}
 								{...provided.dragHandleProps}
 							>
-								<div className="card">
+								<div
+									className={`card ${this.props.item.done &&
+										"background-success"}`}
+									onClick={this.check}
+								>
 									<div className="card-body">
-										<h4 className="card-title">
+										<h4>
 											{this.props.item.title}
 											<i
 												className={`fa ${this.props.item
-													.done && "fa-check"}`}
+													.done && "fa-check check"}`}
 											/>
 										</h4>
 									</div>
@@ -47,4 +62,11 @@ class TaskItem extends Component {
 	}
 }
 
-export default TaskItem;
+const mapDispatchToProps = dispatch => {
+	return {
+		getBoard: boardId => dispatch(getBoard(boardId)),
+		updateTask: (taskId, item) => dispatch(updateTask(taskId, item))
+	};
+};
+
+export default connect(null, mapDispatchToProps)(withRouter(TaskItem));
