@@ -4,15 +4,24 @@ const app = express();
 const port = process.env.PORT || 3000;
 const MongoClient = require("mongodb").MongoClient;
 const bodyParser = require("body-parser");
-const db = require("./config/db");
+const cors = require("cors");
+var mongoose = require("mongoose");
 
-app.use(bodyParser.urlencoded({ extended: true }));
-require("./app/routes")(app, {});
+mongoose.connect(process.env.dbUrl, { useMongoClient: true });
+mongoose.Promise = global.Promise;
 
-app.get("/", (req, res) => {
-	debugger;
-	res.send("\n\nHello, world 2!\n\n");
+var db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error: "));
+db.once("openUri", function() {
+	console.log("Connected correctly to server");
 });
+
+app.use(cors());
+app.options("*", cors());
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+require("./app/routes")(app);
 
 app.listen(port, () => {
 	console.log(`listening on port ${port}`);

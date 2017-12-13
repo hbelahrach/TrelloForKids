@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { withRouter } from "react-router";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import TaskItem from "./TaskItem";
+import { getBoard, addTask } from "../actions/boards";
 
 const getItemStyle = (draggableStyle, isDragging) => ({
 	background: isDragging ? "lightblue" : "",
@@ -9,11 +12,28 @@ const getItemStyle = (draggableStyle, isDragging) => ({
 });
 
 class ListItem extends Component {
+	constructor(props) {
+		super(props);
+		this.title = "";
+	}
+
+	handleKeyPress = event => {
+		if (event.key == "Enter" && this.title) {
+			this.props
+				.addTask(this.props.item._id, { title: this.title })
+				.then(() => {
+					this.input.value = "";
+					this.title = "";
+					this.props.getBoard(this.props.match.params.number);
+				});
+		}
+	};
+
 	render() {
 		return (
 			<Draggable
-				key={this.props.item.id}
-				draggableId={this.props.item.id}
+				key={this.props.item._id}
+				draggableId={this.props.item.order}
 				type="droppable-lists"
 			>
 				{(provided, snapshot) => (
@@ -33,10 +53,10 @@ class ListItem extends Component {
 
 								<Droppable
 									droppableId={`droppable-tasks-${
-										this.props.item.id
+										this.props.item._id
 									}`}
 									type={`droppable-tasks-${
-										this.props.item.id
+										this.props.item._id
 									}`}
 									direction="vertical"
 								>
@@ -49,6 +69,17 @@ class ListItem extends Component {
 															type="text"
 															placeholder="Add a new task ..."
 															id="paperInputs1"
+															ref={el =>
+																(this.input = el)
+															}
+															onKeyPress={
+																this
+																	.handleKeyPress
+															}
+															onChange={e =>
+																(this.title =
+																	e.target.value)
+															}
 														/>
 													</div>
 												</div>
@@ -58,10 +89,10 @@ class ListItem extends Component {
 													task => (
 														<TaskItem
 															item={task}
-															key={task.id}
+															key={task._id}
 															droppableId={`droppable-tasks-${
 																this.props.item
-																	.id
+																	._id
 															}`}
 														/>
 													)
@@ -81,4 +112,11 @@ class ListItem extends Component {
 	}
 }
 
-export default ListItem;
+const mapDispatchToProps = dispatch => {
+	return {
+		getBoard: boardId => dispatch(getBoard(boardId)),
+		addTask: (listId, data) => dispatch(addTask(listId, data))
+	};
+};
+
+export default connect(null, mapDispatchToProps)(withRouter(ListItem));

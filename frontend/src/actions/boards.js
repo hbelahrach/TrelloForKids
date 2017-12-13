@@ -19,10 +19,10 @@ export function boardsSuccess(items) {
     };
 }
 
-export function getBoards(url) {
+export function getBoards() {
     return dispatch => {
         dispatch(boardsIsLoading(true));
-        fetch(url, {
+        fetch(`${process.env.apiUrl}/boards`, {
             "Access-Control-Allow-Origin": "*"
         })
             .then(response => {
@@ -57,10 +57,10 @@ export function activeBoardSuccess(item) {
     };
 }
 
-export function getBoard(url) {
+export function getBoard(boardId) {
     return dispatch => {
         dispatch(activeBoardIsLoading(true));
-        fetch(url, {
+        fetch(`${process.env.apiUrl}/boards/${boardId}`, {
             "Access-Control-Allow-Origin": "*"
         })
             .then(response => {
@@ -80,10 +80,10 @@ export function getBoard(url) {
     };
 }
 
-export function addBoard(url, data) {
+export function addBoard(data) {
     return dispatch => {
         dispatch(activeBoardIsLoading(true));
-        return fetch(url, {
+        return fetch(`${process.env.apiUrl}/boards`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -96,5 +96,75 @@ export function addBoard(url, data) {
             })
             .then(response => response.json())
             .catch(() => dispatch(boardsError(true)));
+    };
+}
+
+export function addList(boardId, data) {
+    return dispatch => {
+        dispatch(activeBoardIsLoading(true));
+        return fetch(`${process.env.apiUrl}/boards/${boardId}/lists`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            "Access-Control-Allow-Origin": "*",
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                return response;
+            })
+
+            .then(response => response.json())
+            .then(item => {
+                console.log("item: ", item);
+                return dispatch(activeBoardSuccess(item));
+            })
+            .catch(() => dispatch(boardsError(true)));
+    };
+}
+
+export function addTask(listId, data) {
+    return dispatch => {
+        return fetch(`${process.env.apiUrl}/lists/${listId}/tasks`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            "Access-Control-Allow-Origin": "*",
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                return response;
+            })
+
+            .then(response => response.json())
+            .then(item => {
+                console.log("item: ", item);
+            })
+            .catch(e => {
+                console.log(e);
+            });
+    };
+}
+
+export function orderList(boardId, params) {
+    return dispatch => {
+        return fetch(`${process.env.apiUrl}/boards/${boardId}/order`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            "Access-Control-Allow-Origin": "*",
+            body: JSON.stringify(params)
+        })
+            .then(response => {
+                return response;
+            })
+
+            .then(response => response.json())
+            .then(list => {
+                console.log(list);
+            })
+            .catch(e => console.log(e));
     };
 }

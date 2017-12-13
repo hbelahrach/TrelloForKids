@@ -11,18 +11,11 @@ class AddBoard extends Component {
 
 	create = () => {
 		if (this.title)
-			this.props
-				.addBoard(
-					"http://5a2dcd370e07b700120839f0.mockapi.io/api/boards",
-					{ title: this.title }
-				)
-				.then(() => {
-					this.title = "";
-					this.input.value = "";
-					this.props.getBoards(
-						"http://5a2dcd370e07b700120839f0.mockapi.io/api/boards"
-					);
-				});
+			this.props.addBoard({ title: this.title }).then(() => {
+				this.title = "";
+				this.input.value = "";
+				this.props.getBoards();
+			});
 	};
 
 	render() {
@@ -79,8 +72,8 @@ class AddBoard extends Component {
 
 const mapDispatchToProps = dispatch => {
 	return {
-		getBoards: url => dispatch(getBoards(url)),
-		addBoard: (url, item) => dispatch(addBoard(url, item))
+		getBoards: url => dispatch(getBoards()),
+		addBoard: item => dispatch(addBoard(item))
 	};
 };
 

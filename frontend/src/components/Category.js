@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
-import { getBoard } from "../actions/boards";
+import { getBoard,     orderList: (boardId, params) => dispatch(orderList(boardId, params))
+ } from "../actions/boards";
 import AddList from "./AddList";
 import ListItem from "./ListItem";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -20,18 +21,14 @@ class Category extends Component {
 
   componentWillMount() {
     let { history, match } = this.props;
-    this.props.getBoard(
-      `http://5a2dcd370e07b700120839f0.mockapi.io/api/boards/${
-        match.params.number
-      }`
-    );
+    this.props.getBoard(match.params.number);
   }
 
   onDragEnd = result => {
     if (!result.destination) return;
     if (result.destination.droppableId == "droppable-lists") {
       let items = reorder(
-        this.state.lists,
+        this.props.lists,
         result.source.index,
         result.destination.index
       );
@@ -62,7 +59,7 @@ class Category extends Component {
 
   render() {
     let { activeBoard } = this.props;
-
+    console.log("activeBoard: ", activeBoard);
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
         <div className="container padding-top-large">
@@ -83,7 +80,7 @@ class Category extends Component {
               activeBoard && (
                 <div className="row" ref={provided.innerRef}>
                   {activeBoard.lists.map(item => (
-                    <ListItem item={item} key={item.id} />
+                    <ListItem item={item} key={item._id} />
                   ))}
                   {provided.placeholder}
                 </div>
@@ -106,7 +103,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getBoard: url => dispatch(getBoard(url))
+    getBoard: boardId => dispatch(getBoard(boardId)),
+    orderList: (boardId, params) => dispatch(orderList(boardId, params))
   };
 };
 

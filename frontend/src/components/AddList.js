@@ -1,12 +1,28 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { withRouter } from "react-router";
+import { addList } from "../actions/boards";
 
 class AddList extends Component {
 	constructor(props) {
 		super(props);
 		this.state = { open: false };
+		this.title = "";
 	}
 
+	create = () => {
+		console.log(this.props.addList);
+		if (this.title)
+			this.props
+				.addList(this.props.match.params.number, { title: this.title })
+				.then(() => {
+					this.title = "";
+					this.input.value = "";
+				});
+	};
+
 	render() {
+		console.log("this.props: ", this.props);
 		return (
 			<div>
 				{!this.state.open && (
@@ -41,9 +57,15 @@ class AddList extends Component {
 									type="text"
 									placeholder="List name ..."
 									id="paperInputs1"
+									ref={el => (this.input = el)}
+									onChange={e =>
+										(this.title = e.target.value)
+									}
 								/>
 							</div>
-							<button className="btn-small">Create</button>
+							<button className="btn-small" onClick={this.create}>
+								Create
+							</button>
 						</div>
 					</div>
 				)}
@@ -52,4 +74,10 @@ class AddList extends Component {
 	}
 }
 
-export default AddList;
+const mapDispatchToProps = dispatch => {
+	return {
+		addList: (boardId, data) => dispatch(addList(boardId, data))
+	};
+};
+
+export default connect(null, mapDispatchToProps)(withRouter(AddList));
