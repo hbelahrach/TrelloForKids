@@ -146,8 +146,8 @@ const mapDispatchToProps = dispatch => {
   return {
     getBoard: boardId => dispatch(getBoard(boardId)),
     orderBoard: (boardId, lists) => dispatch(orderBoard(boardId, lists)),
-    updateList: (listId, list) => dispatch(updateList(listId, list)),
     orderList: (listId, tasks) => dispatch(orderList(listId, tasks)),
+    updateList: (listId, list) => dispatch(updateList(listId, list)),
     activeBoardSuccess: item => dispatch(activeBoardSuccess(item))
   };
 };
