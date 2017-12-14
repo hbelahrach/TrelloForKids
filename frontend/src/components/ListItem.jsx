@@ -86,17 +86,22 @@ class ListItem extends Component {
 													</div>
 												</div>
 											</div>
-											<div ref={provided.innerRef}>
-												{this.props.item.tasks.map(
-													task => (
-														<TaskItem
-															item={task}
-															key={task._id}
-															droppableId={`droppable-tasks`}
-														/>
-													)
-												)}
-												{provided.placeholder}
+											<div
+												className="row"
+												ref={provided.innerRef}
+											>
+												<div className="col-fill col padding-none">
+													{this.props.item.tasks.map(
+														task => (
+															<TaskItem
+																item={task}
+																key={task._id}
+																droppableId={`droppable-tasks`}
+															/>
+														)
+													)}
+													{provided.placeholder}
+												</div>
 											</div>
 										</div>
 									)}

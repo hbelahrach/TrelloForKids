@@ -117,6 +117,23 @@ export function addList(boardId, data) {
     };
 }
 
+export function updateList(listId, data) {
+    return dispatch => {
+        return fetch(`${process.env.apiUrl}/lists/${listId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            "Access-Control-Allow-Origin": "*",
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .catch(e => {
+                return e;
+            });
+    };
+}
+
 export function addTask(listId, data) {
     return dispatch => {
         return fetch(`${process.env.apiUrl}/lists/${listId}/tasks`, {

@@ -54,6 +54,11 @@ class AddList extends Component {
 							<h5 className="card-title">
 								What shall we call the List ?
 							</h5>
+							<h6 className="text-danger margin-top-none">
+								for this freemium version you are allowed to
+								create up to 3 lists
+							</h6>
+
 							<div className="form-group">
 								<input
 									type="text"

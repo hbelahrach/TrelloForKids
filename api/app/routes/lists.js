@@ -11,6 +11,16 @@ var listModel = require("../../models/lists.js"),
 
 listRouter.use(bodyParser.json());
 
+listRouter.route("/:listId").put((req, res) => {
+	listModel
+		.find({ _id: req.params.listId })
+		.update({ $set: req.body })
+		.exec((err, updatedlist) => {
+			if (err) throw err;
+			res.json(updatedlist);
+		});
+});
+
 listRouter.route("/order").post((req, res) => {
 	// not the most efficient but the simplest !
 	let lists = req.body.lists;

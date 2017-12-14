@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import {
   getBoard,
   orderList,
+  updateList,
   orderBoard,
   activeBoardSuccess
 } from "../actions/boards";
@@ -77,13 +78,27 @@ class Board extends Component {
           removed
         );
         this.props.activeBoardSuccess(board);
+
+        let srcList = Object.assign({}, board.lists[srcIndex]);
+        srcList.tasks = srcList.tasks.map(el => el._id);
+        let destList = Object.assign({}, board.lists[destIndex]);
+        destList.tasks = destList.tasks.map(el => el._id);
+        this.props
+          .updateList(srcList._id, srcList)
+          .then(() =>
+            this.props.orderList(srcList._id, board.lists[srcIndex].tasks)
+          );
+        this.props
+          .updateList(destList._id, destList)
+          .then(() =>
+            this.props.orderList(destList._id, board.lists[destIndex].tasks)
+          );
       }
     }
   };
 
   render() {
     let { activeBoard } = this.props;
-    console.log("in here !!!!");
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
         <div className="container">
@@ -104,9 +119,11 @@ class Board extends Component {
                     <ListItem item={item} key={item._id} />
                   ))}
                   {provided.placeholder}
-                  <div className="sm-4 col">
-                    <AddList />
-                  </div>
+                  {activeBoard.lists.length < 3 && (
+                    <div className="sm-4 col">
+                      <AddList />
+                    </div>
+                  )}
                 </div>
               )
             }
@@ -129,6 +146,7 @@ const mapDispatchToProps = dispatch => {
   return {
     getBoard: boardId => dispatch(getBoard(boardId)),
     orderBoard: (boardId, lists) => dispatch(orderBoard(boardId, lists)),
+    updateList: (listId, list) => dispatch(updateList(listId, list)),
     orderList: (listId, tasks) => dispatch(orderList(listId, tasks)),
     activeBoardSuccess: item => dispatch(activeBoardSuccess(item))
   };
