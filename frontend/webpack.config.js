@@ -26,7 +26,8 @@ let config = {
       verbose: false
     },
     inline: true, // inline mode (set to false to disable including client scripts (like livereload)
-    open: true // open default browser while launching
+    open: true, // open default browser while launching
+    port: 8081
   },
   devtool: "eval-source-map", // enable devtool for better debugging experience
   resolve: {

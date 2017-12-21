@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  front:
+    container_name: front
+    build: ./frontend
+    command: yarn start
+    volumes:
+      - /usr/src/frontend/node_modules
+    depends_on:
+      - api
+    links:
+      - api
+    ports:
+      - "8080:8081"
+      
+  api:
+    container_name: api
+    build: ./api
+    command: yarn start
+    volumes:
+      - /usr/src/api/node_modules
+    depends_on:
+      - mongo
+    ports:
+      - "3000:3000"
+    links:
+      - mongo
+
+  mongo:
+    container_name: mongo
+    image: mongo
+    volumes:
+      - ./data:/data/db
+    ports:
+      - "27017:27017"
