@@ -6,7 +6,7 @@ services:
     build: ./frontend
     command: yarn start
     volumes:
-      - /usr/src/frontend/node_modules
+      - /usr/src/app/node_modules
     depends_on:
       - api
     links:
@@ -19,7 +19,7 @@ services:
     build: ./api
     command: yarn start
     volumes:
-      - /usr/src/api/node_modules
+      - /usr/src/app/node_modules
     depends_on:
       - mongo
     ports:
