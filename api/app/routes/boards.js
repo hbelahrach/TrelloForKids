@@ -2,18 +2,20 @@
 * @author  Hamid belahrach
 */
 
-var boardModel = require("../../models/boards.js"),
-	listModel = require("../../models/lists.js"),
+var boardModel = require("../models/boards.js"),
+	listModel = require("../models/lists.js"),
 	express = require("express"),
 	ObjectId = require("mongoose").Types.ObjectId,
 	bodyParser = require("body-parser"),
 	_ = require("lodash"),
-	boardRouter = express.Router();
+	boardRouter = express.Router(),
+	queryString = require("query-string"),
+	verify = require("../passport/jwt").verify;
 
 boardRouter.use(bodyParser.json());
 boardRouter
 	.route("/")
-	.get((req, res) => {
+	.get(verify, (req, res) => {
 		boardModel
 			.find()
 			.populate({
@@ -28,14 +30,14 @@ boardRouter
 				res.json(boards);
 			});
 	})
-	.post((req, res) => {
+	.post(verify, (req, res) => {
 		boardModel.create(req.body, (err, board) => {
 			if (err) throw err;
 			res.json(board);
 		});
 	});
 
-boardRouter.route("/:boardId").get((req, res) => {
+boardRouter.route("/:boardId").get(verify, (req, res) => {
 	boardModel
 		.findById(req.params.boardId)
 		.populate({
@@ -55,7 +57,7 @@ boardRouter.route("/:boardId").get((req, res) => {
 		});
 });
 
-boardRouter.route("/:boardId/lists").post((req, res) => {
+boardRouter.route("/:boardId/lists").post(verify, (req, res) => {
 	boardModel
 		.findById(req.params.boardId)
 		.populate({

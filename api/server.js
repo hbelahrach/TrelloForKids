@@ -3,13 +3,17 @@
 */
 
 require("dotenv").config();
-const express = require("express");
-const app = express();
-const port = process.env.PORT || 3000;
-const MongoClient = require("mongodb").MongoClient;
-const bodyParser = require("body-parser");
-const cors = require("cors");
-var mongoose = require("mongoose");
+
+const express = require("express"),
+	app = express(),
+	port = process.env.PORT || 3000,
+	host = process.env.HOST || "localhost",
+	MongoClient = require("mongodb").MongoClient,
+	bodyParser = require("body-parser"),
+	cors = require("cors"),
+	cookieParser = require("cookie-parser"),
+	mongoose = require("mongoose"),
+	passport = require("passport");
 
 mongoose.connect(process.env.dbUrl, { useMongoClient: true });
 mongoose.Promise = global.Promise;
@@ -20,14 +24,19 @@ db.once("openUri", function() {
 	console.log("Connected correctly to server");
 });
 
+require("./app/passport/passport")(passport);
+
 app.use(cors());
 app.options("*", cors());
-
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-require("./app/routes")(app);
+app.use(passport.initialize());
+app.use(passport.session());
 
-app.listen(port, () => {
+require("./app/routes")(app, passport);
+
+app.listen(port, host, () => {
 	console.log(`listening on port ${port}`);
 });
 

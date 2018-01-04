@@ -30,6 +30,7 @@ WORKDIR /usr/src/app
 # Workaround for libpng issue https://github.com/tcoopman/image-webpack-loader/issues/76
 RUN apt-get install libpng12-0
 
+RUN rm -rf node_modules/
 RUN yarn install 
 COPY . /usr/src/app
 

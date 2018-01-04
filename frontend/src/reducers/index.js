@@ -4,6 +4,9 @@
 
 import { combineReducers } from "redux";
 import boards from "./boards";
+import sessions from "./session";
+
 export default combineReducers({
-	boards
+	boards,
+	session: sessions
 });

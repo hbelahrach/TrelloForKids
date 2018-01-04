@@ -3,7 +3,7 @@
 */
 
 import "./assets/stylesheets/fontawesome-all.css";
-import "papercss/dist/paper.css";
+import "./assets/stylesheets/paper.min.css";
 import "./assets/stylesheets/styles.scss";
 
 import React from "react"; // import the main react dependency
@@ -14,14 +14,11 @@ import { createBrowserHistory } from "history";
 import { Provider } from "react-redux";
 import setStore from "./store/setStore";
 
-const history = createBrowserHistory();
 const store = setStore();
 
 ReactDOM.render(
 	<Provider store={store}>
-		<Router history={history}>
-			<App />
-		</Router>
+		<App />
 	</Provider>,
 	document.getElementById("root")
 ); // render our App component and mount it to our #root element

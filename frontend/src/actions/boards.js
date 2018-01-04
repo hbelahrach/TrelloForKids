@@ -47,7 +47,8 @@ export function activeBoardSuccess(item) {
 export function getBoards() {
     return dispatch => {
         dispatch(boardsIsLoading(true));
-        fetch(`${process.env.apiUrl}/boards`, {
+        let token = localStorage.getItem("token");
+        fetch(`${process.env.apiUrl}/boards?token=${token}`, {
             "Access-Control-Allow-Origin": "*"
         })
             .then(response => {
@@ -64,7 +65,8 @@ export function getBoards() {
 export function getBoard(boardId) {
     return dispatch => {
         dispatch(activeBoardIsLoading(true));
-        fetch(`${process.env.apiUrl}/boards/${boardId}`, {
+        let token = localStorage.getItem("token");
+        fetch(`${process.env.apiUrl}/boards/${boardId}?token=${token}`, {
             "Access-Control-Allow-Origin": "*"
         })
             .then(response => {
@@ -85,7 +87,8 @@ export function getBoard(boardId) {
 export function addBoard(data) {
     return dispatch => {
         dispatch(activeBoardIsLoading(true));
-        return fetch(`${process.env.apiUrl}/boards`, {
+        let token = localStorage.getItem("token");
+        return fetch(`${process.env.apiUrl}/boards?token=${token}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -101,14 +104,18 @@ export function addBoard(data) {
 export function addList(boardId, data) {
     return dispatch => {
         dispatch(activeBoardIsLoading(true));
-        return fetch(`${process.env.apiUrl}/boards/${boardId}/lists`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            "Access-Control-Allow-Origin": "*",
-            body: JSON.stringify(data)
-        })
+        let token = localStorage.getItem("token");
+        return fetch(
+            `${process.env.apiUrl}/boards/${boardId}/lists?token=${token}`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                "Access-Control-Allow-Origin": "*",
+                body: JSON.stringify(data)
+            }
+        )
             .then(response => response.json())
             .then(item => {
                 return dispatch(activeBoardSuccess(item));
@@ -119,7 +126,8 @@ export function addList(boardId, data) {
 
 export function updateList(listId, data) {
     return dispatch => {
-        return fetch(`${process.env.apiUrl}/lists/${listId}`, {
+        let token = localStorage.getItem("token");
+        return fetch(`${process.env.apiUrl}/lists/${listId}?token=${token}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
@@ -136,14 +144,18 @@ export function updateList(listId, data) {
 
 export function addTask(listId, data) {
     return dispatch => {
-        return fetch(`${process.env.apiUrl}/lists/${listId}/tasks`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            "Access-Control-Allow-Origin": "*",
-            body: JSON.stringify(data)
-        })
+        let token = localStorage.getItem("token");
+        return fetch(
+            `${process.env.apiUrl}/lists/${listId}/tasks?token=${token}`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                "Access-Control-Allow-Origin": "*",
+                body: JSON.stringify(data)
+            }
+        )
             .then(response => response.json())
             .catch(e => {
                 return e;
@@ -153,7 +165,8 @@ export function addTask(listId, data) {
 
 export function updateTask(taskId, item) {
     return dispatch => {
-        return fetch(`${process.env.apiUrl}/tasks/${taskId}`, {
+        let token = localStorage.getItem("token");
+        return fetch(`${process.env.apiUrl}/tasks/${taskId}?token=${token}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
@@ -168,7 +181,8 @@ export function updateTask(taskId, item) {
 
 export function orderBoard(boardId, lists) {
     return dispatch => {
-        return fetch(`${process.env.apiUrl}/lists/order`, {
+        let token = localStorage.getItem("token");
+        return fetch(`${process.env.apiUrl}/lists/order?token=${token}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -185,7 +199,8 @@ export function orderBoard(boardId, lists) {
 
 export function orderList(listId, tasks) {
     return dispatch => {
-        return fetch(`${process.env.apiUrl}/tasks/order`, {
+        let token = localStorage.getItem("token");
+        return fetch(`${process.env.apiUrl}/tasks/order?token=${token}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

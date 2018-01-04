@@ -27,7 +27,7 @@ class Home extends Component {
                     <h4
                       className="card-title"
                       onClick={() => {
-                        this.props.history.push(`board/${item._id}`);
+                        this.props.history.push(`/${item._id}`);
                       }}
                     >
                       {item.title}
@@ -42,6 +42,7 @@ class Home extends Component {
     );
   }
 }
+
 const mapStateToProps = state => {
   return {
     items: state.boards.boards

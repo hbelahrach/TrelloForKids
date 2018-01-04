@@ -2,16 +2,17 @@
 * @author  Hamid belahrach
 */
 
-var listModel = require("../../models/lists.js"),
-	taskModel = require("../../models/tasks.js"),
+var listModel = require("../models/lists.js"),
+	taskModel = require("../models/tasks.js"),
 	ObjectId = require("mongoose").Types.ObjectId,
 	express = require("express"),
 	bodyParser = require("body-parser"),
+	verify = require("../passport/jwt").verify,
 	listRouter = express.Router();
 
 listRouter.use(bodyParser.json());
 
-listRouter.route("/:listId").put((req, res) => {
+listRouter.route("/:listId").put(verify, (req, res) => {
 	listModel
 		.find({ _id: req.params.listId })
 		.update({ $set: req.body })
@@ -21,7 +22,7 @@ listRouter.route("/:listId").put((req, res) => {
 		});
 });
 
-listRouter.route("/order").post((req, res) => {
+listRouter.route("/order").post(verify, (req, res) => {
 	// not the most efficient but the simplest !
 	let lists = req.body.lists;
 	var bulk = listModel.collection.initializeOrderedBulkOp();
@@ -35,7 +36,7 @@ listRouter.route("/order").post((req, res) => {
 
 listRouter
 	.route("/:listId/tasks")
-	.post((req, res) => {
+	.post(verify, (req, res) => {
 		listModel
 			.findById(req.params.listId)
 			.populate("tasks")
@@ -52,7 +53,7 @@ listRouter
 				});
 			});
 	})
-	.put((req, res) => {
+	.put(verify, (req, res) => {
 		listModel
 			.findById(req.params.listId)
 			.populate("tasks")
